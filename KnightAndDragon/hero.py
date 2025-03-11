@@ -60,7 +60,7 @@ class Hero:
 
         return True  # Сражение продолжается
 
-    def heal(self):
+    def heal(self) -> None:
         self.armor = self._armor * 2
         self.health = self._health * 2
         self.power *= 2
