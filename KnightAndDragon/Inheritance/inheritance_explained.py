@@ -24,7 +24,7 @@ class Mage(Hero):
     def cast_spell(self):
         return f"{self.name} колдует с помощью посоха '{self.staff.name}'!"
 
-# Пример "Комозиции":
+# Пример "Композиции":
 
 class Sword:
     def __init__(self, name):
