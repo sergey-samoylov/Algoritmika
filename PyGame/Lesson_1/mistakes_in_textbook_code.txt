@@ -1,0 +1,29 @@
+Issues in the Code:
+
+    Screen Not Cleared Before Redrawing:
+
+        When you update the text on the cards, the old text is not cleared from
+        the screen. This causes the new text to overlap with the old text,
+        making it unreadable.
+
+    Text Positioning:
+
+        The shift_x and shift_y values in the draw method are hardcoded and may
+        not align the text properly within the card.
+
+    Event Loop Placement:
+
+        The pygame.display.update() should be called after all drawing
+        operations are complete, not at the beginning of the loop.
+
+    Redrawing the Cards:
+
+        The quest_card.draw(10, 25) and ans_card.draw(10, 25) calls inside the
+        event loop are redundant. Instead, you should redraw the cards in the
+        main loop after updating their text.
+
+    Unnecessary Redraws:
+
+        The quest_card.draw(10, 10) and ans_card.draw(10, 10) calls outside the
+        main loop are unnecessary because the cards are already being drawn
+        inside the loop.
