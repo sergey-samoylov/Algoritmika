@@ -6,9 +6,9 @@
 Для победы нужно собрать 3 кристалла, избегая столкновений с ботами.
 """
 
-from turtle import Turtle, Screen
 from random import randint
 from time import sleep
+from turtle import Turtle, Screen
 
 
 # Константы
