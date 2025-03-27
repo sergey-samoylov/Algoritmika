@@ -24,7 +24,7 @@
 1. Создай новый файл: File → New File
 1. Сохрани как turtle_game.py
 
-## 🏗️ Шаг 1: Импортируем тоьлко необходимые модули
+## 🏗️ Шаг 1: Импортируем только необходимые модули
 
 ```Python
 # Импортируем только нужные модули
@@ -39,89 +39,133 @@ from time import sleep
 - randint - для случайных чисел
 - sleep - для паузы в игре
 
+## Шаг 2: Определяем константы
+
 ```Python
-# Настройки игры
-SCREEN_WIDTH = 800   # Ширина экрана
-SCREEN_HEIGHT = 600  # Высота экрана
-PLAYER_SPEED = 10    # Скорость игрока
-BOT_SPEED = 5        # Скорость врагов (в 2 раза медленнее игрока)
+SCREEN_WIDTH = 400       # Ширина окна
+SCREEN_HEIGHT = 300      # Высота окна
+PLAYER_SPEED = 10        # Скорость черепашки
+BOT_SPEED = 7            # Скорость ботов
+COLLISION_DISTANCE = 20  # Дистанция столкновения
+WIN_SCORE = 3            # Кристаллов для победы
 ```
 
 💡 *Совет: Эти числа можно менять чтобы сделать игру сложнее/легче!*
 
-## 🧩 Шаг 2: Создаём главного героя
+## 😵‍💫 Шаг 3: Создаём класс Sprite
 
 ```Python
-class Hero(Turtle):
-    def __init__(self):
-        super().__init__()  # Используем "силу" черепашки
-        self.shape("circle")  # Делаем круглым
-        self.color("orange")  # Оранжевый цвет
-        self.penup()  # Чтобы не рисовал линию
-        self.speed(0)  # Максимальная скорость анимации
-        self.goto(0, -200)  # Стартовая позиция
-        self.step = PLAYER_SPEED  # Скорость движения
-    
-    # Функции движения
-    def move_up(self):
-        self.goto(self.xcor(), self.ycor() + self.step)
-    
-    def move_down(self):
-        self.goto(self.xcor(), self.ycor() - self.step)
-    
-    def move_left(self):
-        self.goto(self.xcor() - self.step, self.ycor())
-    
-    def move_right(self):
-        self.goto(self.xcor() + self.step, self.ycor())
+class Sprite(Turtle):
+    def __init__(self, x, y, step, shape, color):
+        super().__init__()  # Создаем черепашку
+        self.penup()       # Чтобы не рисовала линию
+        self.speed(0)      # Максимальная скорость
+        self.goto(x, y)    # Стартовая позиция
+        self.color(color)  # Цвет
+        self.shape(shape)  # Форма
+        self.step = step   # Скорость
 ```
 
-🎮 Проверь: Попробуй создать героя и подвигать его!
+🦸‍♂️ Sprite -> базовый для всех персонажей - и черепашки, и ботов, и даже кристалла.
 
-## 👾 Шаг 3: Добавляем врагов
+## 👾 Шаг 4: Добавляем движение
+
+❗В **тот же класс Sprite** добавляем:
 
 ```Python
-class Enemy(Turtle):
-    def __init__(self, x, y):
-        super().__init__()
-        self.shape("square")
-        self.color("red")
-        self.penup()
-        self.speed(0)
-        self.goto(x, y)
-        self.step = BOT_SPEED
-        self.x_start = x  # Начальная точка
-        self.y_start = y
-        self.x_end = -x   # Конечная точка
-        self.y_end = y
-    
-    def move(self):
-        self.forward(self.step)  # Двигаемся вперед
-        # Если дошли до края - разворачиваемся
-        if self.distance(self.x_end, self.y_end) < self.step:
-            self.goto(self.x_start, self.y_start)
-            self.setheading(self.towards(self.x_end, self.y_end))
+class Sprite(Turtle):
+    # <Здесь инициализация класса из Шаг 3>
+    def move_up(self):
+        new_y = self.ycor() + self.step
+        if new_y < SCREEN_HEIGHT/2 - 10:  # Проверяем границу
+            self.goto(self.xcor(), new_y)
+
+    def move_down(self):
+        new_y = self.ycor() - self.step
+        if new_y > -SCREEN_HEIGHT/2 + 10:
+            self.goto(self.xcor(), new_y)
+
+    def move_left(self):
+        new_x = self.xcor() - self.step
+        if new_x > -SCREEN_WIDTH/2 + 10:
+            self.goto(new_x, self.ycor())
+
+    def move_right(self):
+        new_x = self.xcor() + self.step
+        if new_x < SCREEN_WIDTH/2 - 10:
+            self.goto(new_x, self.ycor())
+```
+
+Теперь 🟠 черепашка сможет двигаться во все стороны! А боты и кристалл эти методы использовать не будут.
+
+## 🤖 Шаг 5: Столкновения и движение ботов
+
+❗Продолжаем **дописывать** в класс Sprite:
+
+```Python
+class Sprite(Turtle):
+    # <Здесь инициализация класса из Шаг 3>
+    # <Здесь движения черепашки из Шаг 4>
+    def is_collide(self, sprite):
+        return self.distance(sprite) < COLLISION_DISTANCE
+
+    def set_move(self, x_start, y_start, x_end, y_end):
+        self.x_start = x_start
+        self.y_start = y_start
+        self.x_end = x_end
+        self.y_end = y_end
+        self.goto(x_start, y_start)
+        self.setheading(self.towards(x_end, y_end))
+
+    def make_step(self):
+        try:
+            self.forward(self.step)
+            if abs(self.xcor() - self.x_end) < self.step:
+                self.set_move(self.x_end, self.y_end, self.x_start, self.y_start)
+        except:
+            return  # Если окно закрыто - ничего не делаем
 ```
 
 💥 **Важно: Враги будут ходить туда-сюда автоматически!**
 
-## 🎯 Шаг 4: Создаём цель
+## 🎯 Шаг 6: Создаём игру
+
+Теперь пишем основной код после класса Sprite:
 
 ```Python
-class Target(Turtle):
-    def __init__(self):
-        super().__init__()
-        self.shape("triangle")
-        self.color("green")
-        self.penup()
-        self.speed(0)
-        self.goto(0, 250)
-        self.new_position()
-    
-    def new_position(self):
-        x = randint(-300, 300)  # Случайная позиция по X
-        y = randint(100, 250)   # Случайная позиция по Y
-        self.goto(x, y)
+# Создаём экран
+screen = Screen()
+screen.setup(SCREEN_WIDTH, SCREEN_HEIGHT)
+screen.title("Черепашка vs Боты")
+screen.bgcolor("black")
+
+# Создаём персонажей
+player = Sprite(0, -100, PLAYER_SPEED, 'circle', 'orange')
+enemy1 = Sprite(-SCREEN_WIDTH//2 + 20, 50, BOT_SPEED, 'square', 'red')
+enemy2 = Sprite(SCREEN_WIDTH//2 - 20, -50, BOT_SPEED, 'square', 'red')
+goal = Sprite(0, SCREEN_HEIGHT//2 - 30, 0, 'triangle', 'green')
+
+# Задаём движение ботов
+enemy1.set_move(-SCREEN_WIDTH//2 + 20, 50, SCREEN_WIDTH//2 - 20, 50)
+enemy2.set_move(SCREEN_WIDTH//2 - 20, -50, -SCREEN_WIDTH//2 + 20, -50)
+
+# Настраиваем управление
+# СТРЕЛКИ
+screen.onkey(player.move_up, "Up")      # Стрелка вверх
+screen.onkey(player.move_down, "Down")  # Стрелка вниз
+screen.onkey(player.move_left, "Left")  # Стрелка влево
+screen.onkey(player.move_right, "Right") # Стрелка вправо
+# VIM keys
+screen.onkey(player.move_up, "k")    # k = вверх
+screen.onkey(player.move_down, "j")  # j = вниз
+screen.onkey(player.move_left, "h")  # h = влево
+screen.onkey(player.move_right, "l") # l = вправо
+
+screen.listen()  # Начинаем слушать клавиатуру
+
+# Игровые переменные
+score = 0
+game_active = True
 ```
 
 🍀 *Фишка: Цель будет телепортироваться при касании!*
@@ -146,55 +190,50 @@ def setup_controls(player, screen):
 
 ⌨️ *Дополнительно: Можно добавить управление на WASD!*
 
-## 🏁 Шаг 6: Главная функция игры
+## 🏁 Шаг 7: Главный игровой цикл
+
+Добавляем в конец файла:
 
 ```Python
-def main():
-    # Создаем экран
-    screen = Screen()
-    screen.setup(SCREEN_WIDTH, SCREEN_HEIGHT)
-    screen.title("Моя первая игра!")
-    screen.bgcolor("black") # в "Алгоритмике" эта опция не поддерживалась. Можно закомментить.
-    
-    # Создаем персонажей
-    player = Hero()
-    target = Target()
-    enemy1 = Enemy(-350, 0)
-    enemy2 = Enemy(350, 100)
-    
-    # Настраиваем управление
-    setup_controls(player, screen)
-    
-    # Начальные значения
-    score = 0
-    game_over = False
-    
-    # Главный игровой цикл
-    while not game_over: # while not False == while True - бесконечный до изменения значения
-        # Двигаем врагов
-        enemy1.move()
-        enemy2.move()
+try:
+    while game_active and score < WIN_SCORE:
+        enemy1.make_step()
+        enemy2.make_step()
         
-        # Проверяем столкновения
-        if player.distance(target) < 20:  # Если коснулись цели
+        # Если собрали кристалл
+        if player.is_collide(goal):
             score += 1
-            target.new_position()
-            print(f"Счёт: {score}")
-            
-        if player.distance(enemy1) < 20 or player.distance(enemy2) < 20:
-            print("Игра окончена! Твой счёт:", score)
-            game_over = True # while not True == while False == конец цикла и игры
-    
+            enemy1.hideturtle()  # Прячем ботов
+            enemy2.hideturtle()
+            sleep(1)            # Пауза 1 сек
+            enemy1.showturtle() # Показываем
+            enemy2.showturtle()
+            # Новое положение кристалла
+            goal.goto(randint(-SCREEN_WIDTH//2 + 30, SCREEN_WIDTH//2 - 30), 
+                     SCREEN_HEIGHT//2 - 30)
+            player.goto(0, -100)  # Возвращаем черепашку
+        
+        # Если боты поймали
+        if player.is_collide(enemy1) or player.is_collide(enemy2):
+            goal.hideturtle()
+            print(f"Охранные боты одолели черепашку. Она собрала {score} кристаллов.")
+            game_active = False
+
+    # Проверяем победу
+    if score >= WIN_SCORE:
+        print(f"Ты победил -> добрался черепашкой до кристалла {WIN_SCORE} раза!")
+        enemy1.hideturtle()
+        enemy2.hideturtle()
+
     screen.mainloop()
 
-# Запускаем игру
-if __name__ == "__main__":
-    main()
+except:
+    print("Игра завершена")
 ```
 
 ## 🚀 Как запустить игру
 
-- Нажми F5 или Run → Run Module
+- Нажми F5 или Run → Run Module или прямо в терминале ```Bash python turtle_game.py```
 - Управляй оранжевым кружком стрелками
 - Собирай зелёные треугольники, избегая красных квадратов!
 
