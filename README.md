@@ -12,6 +12,7 @@
 1. [Создание персонажей](https://github.com/sergey-samoylov/Algoritmika/tree/main/AI/CreatingHeroes) - FusionBrain/DALL-E примеры
 1. [Создание фонов](https://github.com/sergey-samoylov/Algoritmika/tree/main/AI/CreatingLocation) - презентация pdf (примеры)
 1. [Генерация изображений при помощи ИИ](https://github.com/sergey-samoylov/Algoritmika/tree/main/AI/Images) - план урока, текстовки
+1. [Создание звуков и музыки](https://github.com/sergey-samoylov/Algoritmika/tree/main/AI/CreatingSounds) - план урока, текстовки, доп. инструменты 
 
 ### ⚔️ Классы - Наследование, Композиция
 1. [Создание героев](https://github.com/sergey-samoylov/Algoritmika/tree/main/KnightAndDragon)
