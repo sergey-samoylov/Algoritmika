@@ -4,7 +4,7 @@
 
 ✨ Идеальный проект для изучения основ Python и игровой разработки!
 
-![Game Poster](img/fast_clicker_poster_algoritmika.png)
+<img src="img/fast_clicker_poster_algoritmika.png" alt="Game Poster" width="50%">
 
 ## 🚀 Особенности проекта
 
@@ -61,7 +61,7 @@ FastClicker
 
 ## 📝 Лицензия
 
-GNU Public License - свободное использование для образовательных целей
+[GNU Public License](https://github.com/sergey-samoylov/Algoritmika/blob/main/LICENSE) - свободное использование для образовательных целей
 
 ---
 
