@@ -1,0 +1,23 @@
+{% extends 'visit_card/base.html' %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Привет! Я изучаю Django</h2>
+    <p>Это мой сайт-визитка, где я собрал все проекты и темы, которые мы прошли.</p>
+    <img src="{% static 'visit_card/images/my_photo.jpg' %}" alt="Моё фото" class="profile-photo">
+</div>
+
+<div class="skills">
+    <h3>Что я уже умею:</h3>
+    <ul>
+        <li>Создавать проекты Django</li>
+        <li>Работать с шаблонами Jinja</li>
+        <li>Настраивать маршруты (URLs)</li>
+        <li>Подключать CSS и изображения</li>
+        <li>Создавать многостраничные сайты</li>
+    </ul>
+</div>
+{% endblock %}

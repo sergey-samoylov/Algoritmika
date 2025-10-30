@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Мой учебный сайт{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'visit_card/css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>🚀 Мой учебный проект по Django</h1>
+        <nav>
+            <a href="{% url 'home' %}">Главная</a> |
+            <a href="{% url 'portfolio' %}">Портфолио</a> |
+            <a href="{% url 'intro' %}">Введение</a> |
+            <a href="{% url 'first_page' %}">Первая страница</a> |
+            <a href="{% url 'routing' %}">Маршрутизация</a> |
+            <a href="{% url 'jinja_variables' %}">Jinja Переменные</a> |
+            <a href="{% url 'jinja_logic' %}">Jinja Логика</a> |
+            <a href="{% url 'jinja_loops' %}">Jinja Циклы</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Сюда будет подставляться содержимое других страниц -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2025 Мой учебный проект. Создано с ❤️ на Django</p>
+    </footer>
+</body>
+</html>

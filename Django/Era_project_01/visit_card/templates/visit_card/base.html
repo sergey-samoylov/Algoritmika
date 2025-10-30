@@ -1,0 +1,30 @@
+<!-- visit_card/templates/visit_card/base.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Мой сайт-визитка{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'visit_card/css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Привет, я [Твоё Имя]!</h1>
+        <nav>
+            <!-- Ссылки, которые будут на каждой странице -->
+            <a href="{% url 'home' %}">О себе</a> |
+            <a href="{% url 'portfolio' %}">Моё портфолио</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Это место, которое будет меняться на других страницах -->
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>Свяжись со мной: my-email@example.com</p>
+    </footer>
+</body>
+</html>

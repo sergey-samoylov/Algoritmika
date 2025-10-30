@@ -1,0 +1,24 @@
+{% extends 'visit_card/base.html' %}
+
+{% block title %}{{ topic }}{% endblock %}
+
+{% block content %}
+<div class="topic-header">
+    <h2>{{ topic }}</h2>
+    <p class="description">{{ description }}</p>
+</div>
+
+<div class="skills-list">
+    <h3>Что я изучил в этой теме:</h3>
+    <ul>
+        {% for skill in skills %}
+        <li>✅ {{ skill }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="navigation">
+    <p><strong>Изучили эту тему? Проверьте свои знания!</strong></p>
+    <a href="{% url 'home' %}" class="button">На главную</a>
+</div>
+{% endblock %}
