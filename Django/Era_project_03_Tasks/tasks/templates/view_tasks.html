@@ -1,0 +1,32 @@
+<!-- tasks/templates/view_tasks.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - TASKS{% endblock %}
+
+{% block content %}
+<div class="task-list">
+    <h2>{{ title }}</h2>
+    
+    {% if tasks %}
+        <!-- Если есть задачи, отображаем их список -->
+        {% for task in tasks %}
+        <div class="task-item">
+            <h3>Задача #{{ task.id }}</h3>
+            <p>{{ task.title }}</p>
+            <p>Статус: {% if task.completed %}Выполнено{% else %}В процессе{% endif %}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <!-- Если список задач пуст, показываем сообщение -->
+        <div class="empty-message">
+            <h3>Список задач пуст</h3>
+            <p>Добавьте свою первую задачу!</p>
+        </div>
+    {% endif %}
+    
+    <!-- Кнопка для перехода к добавлению задачи -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{% url 'add_task' %}" class="btn">Добавить задачу</a>
+    </div>
+</div>
+{% endblock %}

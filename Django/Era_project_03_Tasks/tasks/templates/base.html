@@ -1,0 +1,51 @@
+<!-- tasks/templates/base.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ежедневник{% endblock %}</title>
+    
+    <!-- Подключаем CSS стили -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Скрипт для переключения темы -->
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark-theme');
+            body.classList.toggle('light-theme');
+            
+            // Сохраняем выбор темы в localStorage
+            const isDark = body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+        
+        // При загрузке страницы устанавливаем сохраненную тему
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.classList.add(savedTheme + '-theme');
+        });
+    </script>
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <h1>Дела на сегодня:</h1>
+            <button id="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+    
+    <main class="container">
+        {% block content %}
+        <!-- Содержимое страниц будет здесь -->
+        {% endblock %}
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>GNU General Public License - TASKS Manager</p>
+        </div>
+    </footer>
+</body>
+</html>

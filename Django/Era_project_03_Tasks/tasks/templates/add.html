@@ -1,0 +1,32 @@
+<!-- tasks/templates/add.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - TASKS{% endblock %}
+
+{% block content %}
+<div class="add-task-form">
+    <h2>{{ title }}</h2>
+    
+    <!-- Форма для добавления новой задачи -->
+    <!-- method="post" указывает, что форма отправляет POST запрос -->
+    <!-- В Django формы, изменяющие данные, должны использовать POST -->
+    <form method="post">
+        <!-- В Django все POST формы должны содержать csrf_token -->
+        <!-- Это защита от межсайтовой подделки запросов -->
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="task_title" class="form-label">Название задачи:</label>
+            <input type="text" id="task_title" name="task_title" class="form-input" 
+                   placeholder="Введите название задачи" required>
+        </div>
+        
+        <button type="submit" class="btn">Добавить задачу</button>
+    </form>
+    
+    <!-- Ссылка для возврата к списку задач -->
+    <div style="margin-top: 15px;">
+        <a href="{% url 'view_tasks' %}">← Вернуться к списку задач</a>
+    </div>
+</div>
+{% endblock %}
